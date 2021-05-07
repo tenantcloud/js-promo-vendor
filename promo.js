@@ -5,14 +5,12 @@ $(document).ready(function() {
 	promo.sliderQuestions();
 	promo.sliderScreening();
 	promo.sliderMaintenance();
-	promo.usersMap();
-	promo.autoScroll();
 	promo.headerScroll();
+	promo.postHeaderScroll();
+	promo.progressBar();
 	promo.signUpEmail();
 
 	initElementsAnimation();
-	initFormGroupDefault();
-	memberEggs();
 	statusAnimation();
 });
 
@@ -101,70 +99,12 @@ function initElementsAnimation() {
 	}
 }
 
-function initFormGroupDefault(context) {
-	$('.form-group > .form-group-default', context).click(function() {
-		$(this)
-			.find('input')
-			.focus();
-	});
-
-	if (!this.initFormGroupDefaultRun) {
-		$('body').on('focus', '.form-group > .form-group-default :input', function() {
-			$('.form-group > .form-group-default').removeClass('focused');
-			$(this)
-				.parents('.form-group > .form-group-default')
-				.addClass('focused');
-		});
-
-		$('body').on('blur', '.form-group > .form-group-default :input', function() {
-			$(this)
-				.parents('.form-group > .form-group-default')
-				.removeClass('focused');
-			if ($(this).val()) {
-				$(this)
-					.closest('.form-group > .form-group-default')
-					.find('label')
-					.addClass('fade');
-			} else {
-				$(this)
-					.closest('.form-group > .form-group-default')
-					.find('label')
-					.removeClass('fade');
-			}
-		});
-
-		// Only run the above code once.
-		this.initFormGroupDefaultRun = true;
-	}
-}
-
 function imgload(src, callback) {
 	var image = new Image();
 	image.src = src;
 	$(image).load(function() {
 		callback();
 	});
-}
-
-function memberEggs() {
-	var throttle = false,
-		ross = document.getElementById('teamPhoto');
-
-	if (ross) {
-		ross.addEventListener('click', function(evt) {
-			var member = this;
-
-			if (!throttle && evt.detail === 5) {
-				member.className += ' active';
-				throttle = true;
-
-				setTimeout(function() {
-					member.className = 'members-scroll';
-					throttle = false;
-				}, 2000);
-			}
-		});
-	}
 }
 
 function statusAnimation() {
@@ -191,25 +131,6 @@ var promo = {
 			},
 			800
 		);
-		return false;
-	},
-
-	goToEBookForm: function() {
-		var body = $('html, body');
-		var form = document.getElementById('eBookForm');
-		var positionTop = form.getBoundingClientRect().top + pageYOffset - 10;
-
-		body.animate(
-			{
-				scrollTop: positionTop,
-			},
-			800
-		);
-
-		setTimeout(function() {
-			document.getElementById('ebook-name').focus();
-		}, 800);
-
 		return false;
 	},
 
@@ -278,46 +199,6 @@ var promo = {
 		});
 	},
 
-	/*
-	 **	Marker animation on Contact Us page
-	 */
-	usersMap: function() {
-		var controller = new ScrollMagic.Controller({});
-
-		/*
-		 **	Build scenes
-		 */
-		new ScrollMagic.Scene({ triggerElement: '#usersMap' }).setClassToggle('#usersMap', 'active').addTo(controller);
-	},
-
-	/** Auto scroll for team photo on About page */
-	autoScroll: function() {
-		var vm = this;
-		var container = document.getElementById('teamPhoto');
-
-		if (container) {
-			var containerScrollWidth = container.scrollWidth;
-
-			var startScrolling = function() {
-				vm.scrollInterval = setInterval(function() {
-					if (container.scrollLeft < containerScrollWidth) {
-						container.scrollTo({ top: 0, left: container.scrollLeft + 1 });
-					}
-				}, 20);
-			};
-
-			startScrolling();
-
-			container.addEventListener('mouseover', function() {
-				clearInterval(vm.scrollInterval);
-			});
-
-			container.addEventListener('mouseout', function() {
-				startScrolling();
-			});
-		}
-	},
-
 	headerScroll: function() {
 		var headerFixed = document.getElementById('headerFixed');
 
@@ -336,6 +217,41 @@ var promo = {
 				headerFixed.classList.remove('is-scrolled');
 			}
 		}
+	},
+
+	postHeaderScroll: function() {
+		var postHeader = document.getElementById('postHeader');
+		var menuToggle = document.getElementById('ng-toggle');
+
+		if (postHeader) {
+			_checkScroll();
+
+			window.addEventListener('scroll', function() {
+				_checkScroll();
+			});
+		}
+
+		function _checkScroll() {
+			if ($(window).scrollTop() >= 350) {
+				postHeader.classList.add('is-scrolled');
+				menuToggle.classList.add('is-scrolled');
+			} else {
+				postHeader.classList.remove('is-scrolled');
+				menuToggle.classList.remove('is-scrolled');
+			}
+		}
+	},
+
+	progressBar: function() {
+		$(document).scroll(function (e) {
+			var scrollAmount = $(window).scrollTop();
+			var documentHeight = $(document).height();
+			var windowHeight = $(window).height();
+			var scrollPercent = (scrollAmount / (documentHeight - windowHeight)) * 100;
+			var roundScroll = Math.round(scrollPercent);
+
+			$('.progress-bar').css('width', scrollPercent + '%');
+		});
 	},
 
 	signUpEmail: function() {
