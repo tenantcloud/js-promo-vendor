@@ -9,6 +9,7 @@ $(document).ready(function() {
 	promo.postHeaderScroll();
 	promo.progressBar();
 	promo.signUpEmail();
+	promo.changeNumbers();
 
 	initElementsAnimation();
 	statusAnimation();
@@ -265,5 +266,22 @@ var promo = {
 				elementButton.href = baseHref + '&email=' + e.target.value;
 			});
 		}
+	},
+
+	changeNumbers: function () {
+		let count = 0;
+		const numbers = ['$ 15.00', '$ 50.00', '$ 100.00'];
+		const numbersOneTime = ['$ 15.00 / One time', '$ 50.00 / One time', '$ 100.00 / One time'];
+
+		setInterval(function () {
+			count++;
+			$('#referral-amount').fadeOut(700, function () {
+				$(this).text(numbers[count % numbers.length]).fadeIn(700);
+			});
+
+			$('#profit-amount').fadeOut(700, function () {
+				$(this).text(numbersOneTime[count % numbersOneTime.length]).fadeIn(700);
+			});
+		}, 5000);
 	},
 };
