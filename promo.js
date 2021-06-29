@@ -10,6 +10,9 @@ $(document).ready(function() {
 	promo.progressBar();
 	promo.signUpEmail();
 	promo.changeNumbers();
+	promo.showComparisonTable();
+	promo.stickyTablePlans();
+	promo.showFeatures();
 
 	initElementsAnimation();
 	statusAnimation();
@@ -268,7 +271,7 @@ var promo = {
 		}
 	},
 
-	changeNumbers: function () {
+	changeNumbers: function() {
 		let count = 0;
 		const numbers = ['$ 15.00', '$ 50.00', '$ 100.00'];
 		const numbersOneTime = ['$ 15.00 / One time', '$ 50.00 / One time', '$ 100.00 / One time'];
@@ -284,4 +287,56 @@ var promo = {
 			});
 		}, 5000);
 	},
+
+	showComparisonTable: function() {
+		var table = document.getElementById('pricing-table');
+		var comparisonButton = document.getElementById('comparison');
+		var bgBottom = document.getElementById('abstraction-table-bottom');
+		var bgLeft = document.getElementById('abstraction-faq-left');
+
+		if (table) {
+			comparisonButton.addEventListener('click', () => {
+				table.classList.toggle('show');
+				bgBottom.classList.toggle('u-noneBlock');
+				bgLeft.classList.toggle('u-noneBlock');
+			});
+		}
+	},
+
+
+	stickyTablePlans: function() {
+		var table = document.getElementById('pricing-table');
+
+		if(table) {
+			$(window).scroll(function() {
+				var windowOffset = $(window).scrollTop();
+				var plansOffset = $('#pricing-plans-table').offset().top - 63;
+				var supportHeaderoffset = $('#support-header').offset().top - 100;
+
+				if (windowOffset > plansOffset && windowOffset < supportHeaderoffset) {
+					$('#pricing-plans-table').addClass('sticky')
+				} else if (windowOffset > supportHeaderoffset || windowOffset < plansOffset) {
+					$('#pricing-plans-table').removeClass('sticky');
+				}
+			});
+		}
+	},
+
+	showFeatures: function () {
+		$('.show-features').on('click', function() {
+			var el = $(this);
+
+			if (el.text() == el.data().textSwap) {
+				el.text(el.data().originalText);
+				el.removeClass('rotate')
+				el.siblings('.description')[0].classList.toggle('hidden-xs');
+				el.siblings('.pricing-plan-features')[0].classList.toggle('hidden-xs');
+			} else {
+				el.text(el.data().textSwap);
+				el.addClass('rotate')
+				el.siblings('.description')[0].classList.toggle('hidden-xs');
+				el.siblings('.pricing-plan-features')[0].classList.toggle('hidden-xs');
+			}
+		});
+	}
 };
