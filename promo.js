@@ -271,7 +271,7 @@ var promo = {
 		}
 	},
 
-	changeNumbers: function() {
+	changeNumbers: function () {
 		let count = 0;
 		const numbers = ['$ 15.00', '$ 50.00', '$ 100.00'];
 		const numbersOneTime = ['$ 15.00 / One time', '$ 50.00 / One time', '$ 100.00 / One time'];
